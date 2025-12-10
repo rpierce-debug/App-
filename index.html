@@ -20,12 +20,14 @@
         <button class="btn ghost" id="viewJournalButton">View journal</button>
       </div>
     </div>
-    <div class="hero__card">
+    <div class="hero__card" aria-live="polite">
       <h2>Today at a glance</h2>
       <ul class="status-list" id="statusSummary">
         <li>Last check-in: <span class="value" id="lastCheckIn">—</span></li>
-        <li>Average mood this week: <span class="value" id="averageMood">—</span></li>
+        <li>Average mood (7d): <span class="value" id="averageMood">—</span></li>
         <li>Entries logged: <span class="value" id="entryCount">0</span></li>
+        <li>Current streak: <span class="value" id="streak">0 days</span></li>
+        <li>Best streak: <span class="value" id="bestStreak">0 days</span></li>
       </ul>
     </div>
   </header>
@@ -42,13 +44,14 @@
         </div>
         <span class="chip">Takes 30 seconds</span>
       </div>
-      <form id="checkInForm" class="form">
+      <form id="checkInForm" class="form" aria-describedby="noteCounter">
         <label class="form__label" for="mood">Mood (1 = low, 5 = high)</label>
         <div class="slider-row">
-          <input type="range" id="mood" name="mood" min="1" max="5" value="3" />
+          <input type="range" id="mood" name="mood" min="1" max="5" value="3" aria-valuemin="1" aria-valuemax="5" aria-valuenow="3" />
           <div class="ticks">
             <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
           </div>
+          <p class="muted small" id="moodLabel">Feels steady</p>
         </div>
 
         <label class="form__label" for="energy">Energy level</label>
@@ -59,7 +62,8 @@
         </div>
 
         <label class="form__label" for="note">What's on your mind?</label>
-        <textarea id="note" name="note" rows="4" placeholder="Give yourself space to reflect"></textarea>
+        <textarea id="note" name="note" rows="4" maxlength="500" placeholder="Give yourself space to reflect"></textarea>
+        <div class="char-counter" id="noteCounter" aria-live="polite">0 / 500</div>
 
         <div class="form__footer">
           <label class="switch">
@@ -67,7 +71,10 @@
             <span class="slider"></span>
             <span class="switch__label">Add a breathing break reminder</span>
           </label>
-          <button type="submit" class="btn primary">Save check-in</button>
+          <div class="form__actions">
+            <button type="button" class="btn ghost" id="autoFill">Suggest prompts</button>
+            <button type="submit" class="btn primary">Save check-in</button>
+          </div>
         </div>
       </form>
     </section>
@@ -100,6 +107,14 @@
       </article>
 
       <article class="card">
+        <p class="eyebrow">Insights</p>
+        <h3>Your recent mood trend</h3>
+        <p class="muted">Last 10 check-ins • steady range from 1 (low) to 5 (high)</p>
+        <canvas id="moodChart" width="320" height="120" aria-label="Mood trend line chart" role="img"></canvas>
+        <div class="muted small" id="insightSummary"></div>
+      </article>
+
+      <article class="card">
         <p class="eyebrow">Resources</p>
         <h3>Need extra support?</h3>
         <ul class="resource-list">
@@ -118,7 +133,16 @@
           <h2>Recent check-ins</h2>
           <p class="muted">Cerina keeps the latest 50 entries on this device so you can spot trends.</p>
         </div>
-        <button class="btn ghost" id="clearEntries">Clear entries</button>
+        <div class="panel__actions">
+          <label class="muted small" for="rangeFilter">Show</label>
+          <select id="rangeFilter" class="select">
+            <option value="all">All time</option>
+            <option value="7">Last 7 days</option>
+            <option value="30">Last 30 days</option>
+          </select>
+          <button class="btn ghost" id="exportEntries">Export (.json)</button>
+          <button class="btn ghost" id="clearEntries">Clear entries</button>
+        </div>
       </div>
       <div class="timeline" id="timeline" aria-live="polite"></div>
     </section>
