@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cerina | Mental Health Companion</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__text">
+      <p class="eyebrow">Welcome to Cerina</p>
+      <h1>Your pocket companion for daily mental health care</h1>
+      <p class="lead">
+        Cerina keeps your reflections, reminds you of proven coping skills, and brings
+        calm structure to your day—all in one simple place.
+      </p>
+      <div class="hero__actions">
+        <button class="btn primary" id="checkInButton">Start a check-in</button>
+        <button class="btn ghost" id="viewJournalButton">View journal</button>
+      </div>
+    </div>
+    <div class="hero__card" aria-live="polite">
+      <h2>Today at a glance</h2>
+      <ul class="status-list" id="statusSummary">
+        <li>Last check-in: <span class="value" id="lastCheckIn">—</span></li>
+        <li>Average mood (7d): <span class="value" id="averageMood">—</span></li>
+        <li>Entries logged: <span class="value" id="entryCount">0</span></li>
+        <li>Current streak: <span class="value" id="streak">0 days</span></li>
+        <li>Best streak: <span class="value" id="bestStreak">0 days</span></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel" id="checkInPanel">
+      <div class="panel__header">
+        <div>
+          <p class="eyebrow">Daily check-in</p>
+          <h2>How are you feeling right now?</h2>
+          <p class="muted">
+            Take a moment to breathe. This space is just for you—nothing is shared.
+          </p>
+        </div>
+        <span class="chip">Takes 30 seconds</span>
+      </div>
+      <form id="checkInForm" class="form" aria-describedby="noteCounter">
+        <label class="form__label" for="mood">Mood (1 = low, 5 = high)</label>
+        <div class="slider-row">
+          <input type="range" id="mood" name="mood" min="1" max="5" value="3" aria-valuemin="1" aria-valuemax="5" aria-valuenow="3" />
+          <div class="ticks">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+          </div>
+          <p class="muted small" id="moodLabel">Feels steady</p>
+        </div>
+
+        <label class="form__label" for="energy">Energy level</label>
+        <div class="radio-row" id="energy">
+          <label><input type="radio" name="energy" value="Low" checked /> Low</label>
+          <label><input type="radio" name="energy" value="Stable" /> Stable</label>
+          <label><input type="radio" name="energy" value="High" /> High</label>
+        </div>
+
+        <label class="form__label" for="note">What's on your mind?</label>
+        <textarea id="note" name="note" rows="4" maxlength="500" placeholder="Give yourself space to reflect"></textarea>
+        <div class="char-counter" id="noteCounter" aria-live="polite">0 / 500</div>
+
+        <div class="form__footer">
+          <label class="switch">
+            <input type="checkbox" id="breathingReminder" checked />
+            <span class="slider"></span>
+            <span class="switch__label">Add a breathing break reminder</span>
+          </label>
+          <div class="form__actions">
+            <button type="button" class="btn ghost" id="autoFill">Suggest prompts</button>
+            <button type="submit" class="btn primary">Save check-in</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <p class="eyebrow">Coping skills</p>
+        <h3>Ground yourself</h3>
+        <p class="muted">Try the 5-4-3-2-1 grounding exercise to reconnect with the present.</p>
+        <ol class="list">
+          <li>Notice five things you can see.</li>
+          <li>Notice four things you can touch.</li>
+          <li>Notice three things you can hear.</li>
+          <li>Notice two things you can smell.</li>
+          <li>Notice one thing you can taste.</li>
+        </ol>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">Breathing</p>
+        <h3>Box breathing</h3>
+        <p class="muted">Use a simple rhythm to calm your nervous system.</p>
+        <div class="breathing">
+          <div class="breathing__step">Inhale for 4</div>
+          <div class="breathing__step">Hold for 4</div>
+          <div class="breathing__step">Exhale for 4</div>
+          <div class="breathing__step">Hold for 4</div>
+        </div>
+        <p class="muted small">Repeat for 4 rounds. Cerina will remind you if enabled above.</p>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">Insights</p>
+        <h3>Your recent mood trend</h3>
+        <p class="muted">Last 10 check-ins • steady range from 1 (low) to 5 (high)</p>
+        <canvas id="moodChart" width="320" height="120" aria-label="Mood trend line chart" role="img"></canvas>
+        <div class="muted small" id="insightSummary"></div>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">Resources</p>
+        <h3>Need extra support?</h3>
+        <ul class="resource-list">
+          <li><strong>988 Suicide & Crisis Lifeline:</strong> Call or text 988 (U.S.)</li>
+          <li><strong>Crisis Text Line:</strong> Text HOME to 741741</li>
+          <li><strong>Warmline Directory:</strong> warmline.org/listings</li>
+          <li><strong>Emergency:</strong> If you're in danger, call your local emergency number.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="panel" id="journalPanel">
+      <div class="panel__header">
+        <div>
+          <p class="eyebrow">Reflection log</p>
+          <h2>Recent check-ins</h2>
+          <p class="muted">Cerina keeps the latest 50 entries on this device so you can spot trends.</p>
+        </div>
+        <div class="panel__actions">
+          <label class="muted small" for="rangeFilter">Show</label>
+          <select id="rangeFilter" class="select">
+            <option value="all">All time</option>
+            <option value="7">Last 7 days</option>
+            <option value="30">Last 30 days</option>
+          </select>
+          <button class="btn ghost" id="exportEntries">Export (.json)</button>
+          <button class="btn ghost" id="clearEntries">Clear entries</button>
+        </div>
+      </div>
+      <div class="timeline" id="timeline" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p class="muted">Cerina is a gentle companion, not a replacement for professional care.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
